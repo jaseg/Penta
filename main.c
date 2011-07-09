@@ -1,6 +1,6 @@
 
 /* 	Penta controller firmware v0.0.0.0.0.0.1\beta0-1
-	Copyright (C) 2011 by Jan Sebastian Götte <s@jaseg.de>
+	Copyright (C) 2011 by Sebastian Götte <s@jaseg.de>
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -15,6 +15,11 @@
 	You should have received a copy of the GNU General Public License
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+#include <avr/io.h>
+#include <util/delay.h>
+
+#include "usbconfig.h"
 
 
 int main(void)
