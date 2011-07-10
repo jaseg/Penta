@@ -1,6 +1,6 @@
 /* Tabsize: 4
- * Copyright: (c) 2005 by OBJECTIVE DEVELOPMENT Software GmbH, 2011 by
- * 			  Sebastian Götte <s@jaseg.de>
+ * Copyright: (c) 2005 by OBJECTIVE DEVELOPMENT Software GmbH,
+ * 			  (c) 2011 by Sebastian Götte <s@jaseg.de>
  * License: GNU GPL v3 (see LICENSE)
  */
 

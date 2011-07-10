@@ -5,11 +5,11 @@
 # (GNU make, BSD make, SysV make)
 
 
-MCU = atmega8
+MCU = atmega128
 FORMAT = ihex
 TARGET = main
-SRC = $(TARGET).c $(USB_SRC)
-ASRC = $(USB_ASRC)
+SRC = $(TARGET).c
+ASRC = 
 OPT = s
 
 # Name of this Makefile (used for "make depend").
@@ -27,14 +27,11 @@ DEBUG = stabs
 # gnu99 - c99 plus GCC extensions
 CSTANDARD = -std=gnu99
 
-#CPU clock frequency (Hz)
-F_CPU = 12000000
-
 # Place -D or -U options here
-CDEFS = $(USB_CDEFS) -DF_CPU=$(F_CPU)
+CDEFS =
 
 # Place -I options here
-CINCS = $(USB_CINCS)
+CINCS =
 
 
 CDEBUG = -g$(DEBUG)
@@ -42,14 +39,7 @@ CWARN = -Wall -Wstrict-prototypes
 CTUNING = -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums
 #CEXTRA = -Wa,-adhlns=$(<:.c=.lst)
 CFLAGS = $(CDEBUG) $(CDEFS) $(CINCS) -O$(OPT) $(CWARN) $(CSTANDARD) $(CEXTRA)
-ASFLAGS = $(USB_ASFLAGS)
 
-#USB driver defs
-USB_SRC = usbdrv/usbdrv.c
-USB_CDEFS = 
-USB_CINCS = -Iusbdrv
-USB_ASRC = usbdrv/usbdrvasm.S
-USB_ASFLAGS = -Iusbdrv -DF_CPU=$(F_CPU)
 
 #ASFLAGS = -Wa,-adhlns=$(<:.S=.lst),-gstabs 
 

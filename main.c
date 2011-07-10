@@ -1,5 +1,5 @@
 
-/* 	Penta controller firmware v0.0.0.0.0.0.1\beta0-1
+/* 	Penta controller firmware v0.0.0.0.0.0.1\alpha0-1
 	Copyright (C) 2011 by Sebastian Götte <s@jaseg.de>
 
 	This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,45 @@
 
 #include "usbconfig.h"
 
+#define LED_RED_DDR		DDRC
+#define LED_RED_PORT	PORTC
+#define LED_RED_PIN		0 //Verify.
+#define LED_GREEN_DDR	DDRC
+#define LED_GREEN_PORT	PORTC
+#define LED_GREEN_PIN	2 //Verify.
+
+#define SWITCH_DDR		DDRD
+#define SWITCH_INPUT	PIND
+#define SWITCH_PIN		0
+
+#define MOTOR_DDR		DDRD
+#define MOTOR_PORT		PORTD
+#define MOTOR_PIN		1
+
+#define DEBOUNCE_TIME	200
+
+uint8_t old_switch_state;
+uint8_t switch_wait_time;
 
 int main(void)
 {
 	//Device initialization
+	LED_RED_DDR |= 1<<LED_RED_PIN;
+	LED_GREEN_DDR |= 1<<LED_GREEN_PIN;
+	MOTOR_DDR |= 1<<MOTOR_PIN;
+	old_switch_state = 0;
+	switch_wait_time = 0;
 	//USB Initialization
 	
-	for(;;)
-	{
+	for(;;){
 		//switch poll
+		if(SWITCH_INPUT & (1<<SWITCH_PIN)){
+
+		}else{
+			
+		}
 		//USB poll
+		_delay_ms(1);
 	}
 	return 0;
 }
