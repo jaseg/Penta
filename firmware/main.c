@@ -19,6 +19,7 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+#include "../requests.h" //TODO bad style.
 #include "usbdrv.h"
 
 #define LED_RED_DDR		DDRC
@@ -40,11 +41,6 @@
 
 uint8_t old_switch_state;
 uint8_t switch_wait_time;
-
-//Request ids
-#define PENTA_REQ_SET_LED	1
-#define PENTA_REQ_SET_MOTOR	2
-#define PENTA_REQ_GET_POS	3 //Yet to be implemented (in hardware as well as in software)
 
 USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
