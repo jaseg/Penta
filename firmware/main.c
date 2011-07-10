@@ -79,7 +79,7 @@ int main(void)
 	for(;;){
 		//switch poll
 		if(switch_wait_time == DEBOUNCE_TIME){
-			if(SWITCH_INPUT & (1<<SWITCH_PIN) && !old_switch_state){ //Catches rising edges.
+			if(!(SWITCH_INPUT & (1<<SWITCH_PIN)) && old_switch_state){ //Catches falling edges.
 				//Action!
 				if(usbInterruptIsReady()){
 					intout[0] = 0x01; //Default, means: Button just got pressed. Other values or more bytes possible for position encoding.
