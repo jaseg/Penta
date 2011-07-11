@@ -37,6 +37,7 @@ int main(int argc, char** argv)
 			printf("Error receiving interrupt data (error code %d).\n", ec);
 			//return 1;
 		}
+		printf("Received interrupt data: %x\n", data[0]);
 		if((ec = usb_control_msg(penta, 0x40, PENTA_REQ_SET_MOTOR, state, 0, 0, 0, 1000))){
 			printf("Problems with a motor control transfer (error code %d).\n", ec);
 			return 1;
