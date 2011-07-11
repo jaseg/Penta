@@ -24,4 +24,4 @@ $(TARGET):
 	gcc $(CFLAGS) -o $(TARGET) $(SRC)
 
 clean:
-	rm $(TARGET)
+	rm $(TARGET) || true

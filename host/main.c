@@ -23,17 +23,19 @@
 int main(int argc, char** argv)
 {
 	usb_dev_handle* penta;
-	if(usbOpenDevice(&penta, 0x16c0, "s@jaseg.de", 0x05dc, "Penta", "*", NULL, stdout)){ //Ugh. Double reference.
-		printf("Cannot open device handle.\n");
+	usb_init();
+	int ec = 0;
+	if((ec = usbOpenDevice(&penta, 0x16c0, "s@jaseg.de", 0x05dc, "Penta", "*", 0, stdout))){ //Ugh. Double reference.
+		printf("Cannot open device handle (error code %d).\n", ec);
 		return 1;
 	}
-	usb_control_msg(penta, 0, PENTA_REQ_SET_LED, 1, 0, 0, 0, 1000);
-	usleep(500);
-	usb_control_msg(penta, 0, PENTA_REQ_SET_LED, 2, 0, 0, 0, 1000);
-	usleep(500);
-	usb_control_msg(penta, 0, PENTA_REQ_SET_LED, 3, 0, 0, 0, 1000);
-	usleep(500);
-	usb_control_msg(penta, 0, PENTA_REQ_SET_LED, 0, 0, 0, 0, 1000);
+	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 1, 0, 0, 0, 1000);
+	usleep(500000);
+	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 2, 0, 0, 0, 1000);
+	usleep(500000);
+	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 3, 0, 0, 0, 1000);
+	usleep(500000);
+	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 0, 0, 0, 0, 1000);
 	usb_close(penta);
 	return 0;
 }
