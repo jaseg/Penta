@@ -18,5 +18,7 @@
 //Request ids
 #define PENTA_REQ_SET_LED	1
 #define PENTA_REQ_SET_MOTOR	2
-#define PENTA_REQ_GET_POS	3 //Yet to be implemented (in hardware as well as in software)
+
+#define PENTA_INT_BUTTON_PRESSED	1
+#define PENTA_INT_POSITION_REACHED	2
 

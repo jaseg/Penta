@@ -29,7 +29,6 @@
 #define LED_GREEN_PORT	PORTC
 #define LED_GREEN_PIN	2 //Verify.
 
-#define SWITCH_DDR		DDRD
 #define SWITCH_INPUT	PIND
 #define SWITCH_PIN		0
 
@@ -37,12 +36,18 @@
 #define MOTOR_PORT		PORTD
 #define MOTOR_PIN		1
 
+#define POSITION_PORT	PORTC
+#define POSITION_INPUT	PINC
+#define POSITION_PIN	5
+
 #define DEBOUNCE_TIME	200
 
-uint8_t old_switch_state;
+uint8_t old_input_state; //87654321
+						 // 1 - button
+						 // 2 - position sensor
 uint8_t switch_wait_time;
 
-USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8])
+usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
 	usbRequest_t* rq = (usbRequest_t*) data;
 	switch(rq->bRequest){
@@ -70,27 +75,43 @@ int main(void)
 	LED_RED_DDR |= 1<<LED_RED_PIN;
 	LED_GREEN_DDR |= 1<<LED_GREEN_PIN;
 	MOTOR_DDR |= 1<<MOTOR_PIN;
-	old_switch_state = 0;
+	POSITION_PORT |= 1<<POSITION_PIN; //Enable internal pullup
+	old_input_state = 0;
 	switch_wait_time = DEBOUNCE_TIME;
 	//USB Initialization
 	usbInit();
 	sei();
 	//Infinitely eternal main loop.
 	for(;;){
+		//If one poll shows a change and the interrupt queue is not yet empty
+		//said change will be ignored so the interrupt is sent when the queue is
+		//empty *and* the active state of the input continues.
 		//switch poll
 		if(switch_wait_time == DEBOUNCE_TIME){
-			if(!(SWITCH_INPUT & (1<<SWITCH_PIN)) && old_switch_state){ //Catches falling edges.
+			if(!(SWITCH_INPUT & (1<<SWITCH_PIN)) && old_input_state & 0x01){ //Catches falling edges.
 				//Action!
 				if(usbInterruptIsReady()){
-					intout[0] = 0x01; //Default, means: Button just got pressed. Other values or more bytes possible for position encoding.
+					intout[0] = PENTA_INT_BUTTON_PRESSED;
 					usbSetInterrupt(intout, 1);
+					old_input_state = (old_input_state & 0xFE) | ((SWITCH_INPUT & (1<<SWITCH_PIN))?1:0);
 				}
 				//else: do we have a problem? TODO
 				switch_wait_time = 0;
+			}else{
+				old_input_state = (old_input_state & 0xFE) | ((SWITCH_INPUT & (1<<SWITCH_PIN))?1:0);
 			}
-			old_switch_state = SWITCH_INPUT & (1<<SWITCH_PIN);
 		}else{
 			switch_wait_time++;
+		}
+		//Position sensor poll
+		if(!(POSITION_INPUT & (1<<POSITION_PIN)) && old_input_state & 0x02){
+			if(usbInterruptIsReady()){
+				intout[0] = PENTA_INT_POSITION_REACHED;
+				usbSetInterrupt(intout, 1);
+				old_input_state = (old_input_state & 0xFD) | ((POSITION_INPUT & (1<<SWITCH_PIN))?2:0);
+			}
+		}else{
+			old_input_state = (old_input_state & 0xFD) | ((POSITION_INPUT & (1<<POSITION_PIN))?2:0);
 		}
 		usbPoll();
 		_delay_ms(1);

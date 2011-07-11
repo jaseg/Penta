@@ -27,15 +27,29 @@ int main(int argc, char** argv)
 	int ec = 0;
 	if((ec = usbOpenDevice(&penta, 0x16c0, "s@jaseg.de", 0x05dc, "Penta", "*", 0, stdout))){ //Ugh. Double reference.
 		printf("Cannot open device handle (error code %d).\n", ec);
-		return 1;
+		return 2;
 	}
-	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 1, 0, 0, 0, 1000);
-	usleep(500000);
-	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 2, 0, 0, 0, 1000);
-	usleep(500000);
-	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 3, 0, 0, 0, 1000);
-	usleep(500000);
-	usb_control_msg(penta, 0x40, PENTA_REQ_SET_LED, 0, 0, 0, 0, 1000);
+	int state = 0;
+	while(1){
+		int transmitted = 0;
+		char data[8];
+		if((transmitted = usb_interrupt_read(penta, 1, data, sizeof(data), 0)) < 0){
+			printf("Error receiving interrupt data (error code %d).\n", ec);
+			//return 1;
+		}
+		if((ec = usb_control_msg(penta, 0x40, PENTA_REQ_SET_MOTOR, state, 0, 0, 0, 1000))){
+			printf("Problems with a motor control transfer (error code %d).\n", ec);
+			return 1;
+		}
+		//sleep(3);
+		/*if((ec = usb_control_msg(penta, 0x40, PENTA_REQ_SET_MOTOR, 0, 0, 0, 0, 1000))){
+			printf("Problems with a motor control transfer (error code %d).\n", ec);
+			return 1;
+		}*/
+		state++;
+		state &= 0x0001;
+		//sleep(3);
+	}
 	usb_close(penta);
 	return 0;
 }
