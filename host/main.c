@@ -44,6 +44,8 @@ int main(int argc, char** argv)
 				printf("Problems with a motor control transfer (error code %d).\n", ec);
 				return 1;
 			}
+			state++;
+			state &= 0x0001;
 		}else{
 			printf("Position encoder triggered\n");
 		}
@@ -52,8 +54,6 @@ int main(int argc, char** argv)
 			printf("Problems with a motor control transfer (error code %d).\n", ec);
 			return 1;
 		}*/
-		state++;
-		state &= 0x0001;
 		//sleep(3);
 	}
 	usb_close(penta);
