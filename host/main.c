@@ -29,7 +29,7 @@ int main(int argc, char** argv)
 		printf("Cannot open device handle (error code %d).\n", ec);
 		return 2;
 	}
-	int state = 0;
+	int state = 1;
 	while(1){
 		int transmitted = 0;
 		char data[8];
