@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 				return 1;
 			}
 		}else{
-			printf("Position encoder triggered");
+			printf("Position encoder triggered\n");
 		}
 		//sleep(3);
 		/*if((ec = usb_control_msg(penta, 0x40, PENTA_REQ_SET_MOTOR, 0, 0, 0, 0, 1000))){
